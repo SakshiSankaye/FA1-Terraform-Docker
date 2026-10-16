@@ -62,25 +62,28 @@
 
     <script>
 
-        let environment = "Local";
-	let backendPort = "5001";
+        let environment = "Kubernetes";
 
 	document.getElementById("environment").innerText = environment;
 
 
         function checkBackend() {
-
-            fetch("http://localhost:" + backendPort + "/api")
-                .then(response => response.json())
-                .then(data => {
-                    document.getElementById("result").innerText =
-                        "✓ " + data.message;
-                })
-                .catch(error => {
-                    document.getElementById("result").innerText =
-                        "✗ Backend connection failed";
-                });
-        }
+    fetch("/api")
+        .then(response => {
+            if (!response.ok) {
+                throw new Error("Backend request failed");
+            }
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById("result").innerText =
+                "✓ " + data.message;
+        })
+        .catch(error => {
+            document.getElementById("result").innerText =
+                "Backend connection failed";
+        });
+}
 
     </script>
 
